@@ -1,0 +1,30 @@
+package: widgets
+models:
+  - name: Widget
+    description: A simple widget data model
+    attributes:
+      - name: size
+        type: int
+        default: 0
+        description: Size of the widget
+      - name: is_important
+        type: boolean
+        default: false
+        description: Is this widget important?
+      - name: data
+        type: [byte]
+        description: Data bound to this widget
+  - name: Sprocket
+    description: Sprocket, kind of like a widget but can be bumpy and is never important
+    attributes:
+      - name: size
+        type: int
+        default: 0
+        description: Size of the sprocket
+      - name: is_bumpy
+        type: boolean
+        default: false
+        description: Is this sprocket bumpy?
+      - name: data
+        type: [byte]
+        description: Data bound to this sprocket
