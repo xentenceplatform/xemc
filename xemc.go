@@ -8,19 +8,58 @@ import (
 
 var modelYamlPath string
 
+func displayApplicationHeader() (int, error) {
+	return fmt.Println("xemc: Xentence Model Compiler")
+}
+
 func init() {
-	flag.StringVar(&modelYamlPath, "model", "", "Path to the YAML model file to compile")
-	flag.StringVar(&modelYamlPath, "m", "", "Path to the YAML model file to compile")
+	configureModelPathFlagArgument()
 }
 
 func main() {
-	fmt.Println("xemc: Xentence Model Compiler")
+	displayApplicationHeader()
+	parseArguments()
+	processModelFileIfShould(hasValidModelPath())
+}
 
-	flag.Parse()
+func configureModelPathFlagArgument() {
+	configureStringFlagArgument(
+		&modelYamlPath,
+		"model",
+		"m",
+		"",
+		"Path to the YAML model file to compile")
+}
+
+func hasValidModelPath() bool {
+	var validModelPath bool
 
 	if modelYamlPath == "" {
-		fmt.Println("No model was specified, specify a model with -m or -model")
+		fmt.Println(getModelPathMissingString())
+		validModelPath = false
 	} else {
-		fmt.Println(models.ReadModel(modelYamlPath))
+		validModelPath = true
+	}
+	return validModelPath
+}
+
+func getModelPathMissingString() string {
+	return "No model was specified, specify a model with -m or -model"
+}
+
+func configureStringFlagArgument(storagePointer *string, longHandflag string, shortHandFlag string, defaultValue string, usage string) {
+	flag.StringVar(storagePointer, longHandflag, defaultValue, usage)
+	flag.StringVar(storagePointer, shortHandFlag, defaultValue, usage)
+}
+
+func parseArguments() {
+	flag.Parse()
+}
+
+func processModelFileIfShould(shouldAttempt bool) {
+	if shouldAttempt {
+		outputString := models.ReadModel(modelYamlPath)
+
+		fmt.Println(outputString)
 	}
 }
